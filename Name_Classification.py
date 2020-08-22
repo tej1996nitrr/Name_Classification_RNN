@@ -4,6 +4,16 @@ import glob
 import os
 import unicodedata
 import string
+import torch
+import time
+import math
+import random
+
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+
+import torch.nn as nn
+
 def findfiles(path):
     return glob.glob(path)
 print(findfiles('data/names/*.txt'))
@@ -34,7 +44,7 @@ n_categories  =len(all_categories)
 
 '''Turning Names into Tensors'''
 
-import torch
+
 def letterToIndex(letter):
     return all_letters.find(letter)
 
@@ -52,7 +62,6 @@ def lineToTensor(line):
 print(letterToTensor('J'))
 print(lineToTensor('Jon'))
 
-import torch.nn as nn
 class RNN(nn.Module):
     def __init__(self,input_size,hidden_size,output_size):
         super(RNN,self).__init__()
@@ -91,7 +100,7 @@ def categoryFromOutput(output):
 
 print(categoryFromOutput(output))
 
-import random
+
 
 def randomChoice(l):
     return l[random.randint(0, len(l) - 1)]
@@ -106,7 +115,6 @@ def randomTrainingExample():
 for i in range(10):
     category, line, category_tensor, line_tensor = randomTrainingExample()
     print('category =', category, '/ line =', line)
-
 
 criterion = nn.NLLLoss()
 learning_rate = 0.005 # If we set this too high, it might explode. If too low, it might not learn
@@ -123,9 +131,6 @@ def train(category_tensor, line_tensor):
         p.data.add_(-learning_rate, p.grad.data)
     return output, loss.item()
 
-
-import time
-import math
 
 n_iters = 100000
 print_every = 5000
@@ -156,8 +161,6 @@ for iter in range(1, n_iters + 1):
         all_losses.append(current_loss / plot_every)
         current_loss = 0
 
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 
 plt.figure()
 plt.plot(all_losses)
